@@ -7,11 +7,20 @@
 
 import UIKit
 
+private let reuseIdentifier = "PostCell"
+
 class ViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     
     var viewModel = HomeVM()
     private var myTableView: UITableView!
-    var posts: [Child] = []
+//    var posts: [Child] = []
+    var posts: [Child] = [] {
+        didSet {
+            DispatchQueue.main.async {
+                self.myTableView.reloadData()
+            }
+        }
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -25,9 +34,12 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         let displayHeight: CGFloat = self.view.frame.height
         
         myTableView = UITableView(frame: CGRect(x: 0, y: barHeight, width: displayWidth, height: displayHeight - barHeight))
-        myTableView.register(UITableViewCell.self, forCellReuseIdentifier: "PostCell")
+        myTableView.register(PostTableViewCell.self, forCellReuseIdentifier: reuseIdentifier)
         myTableView.dataSource = self
         myTableView.delegate = self
+        
+        myTableView.autoresizesSubviews = true
+        
         self.view.addSubview(myTableView)
     }
     
@@ -36,16 +48,15 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
             if let posts = posts {
                 self.updateUI(with: posts)
             }
-            self.myTableView.dataSource = self
-            self.myTableView.delegate = self
         }
     }
     
     func updateUI(with posts: Posts) {
         self.posts = posts.allPosts.children
         for child in self.posts {
-            print(child.post.title)
+            print(child.post)
         }
+        myTableView.reloadData()
     }
     
     func configureViewModel() {
@@ -63,9 +74,21 @@ extension ViewController {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "PostCell", for: indexPath as IndexPath)
-        cell.textLabel!.text = "\(self.posts[indexPath.row].post.title)"
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath) as? PostTableViewCell else { return UITableViewCell() }
+        cell.configure(post: self.posts[indexPath.row].post)
+        
+        let score = String(self.posts[indexPath.row].post.score)
+        let numComments = String(self.posts[indexPath.row].post.numComments)
+        
+        cell.textLabel!.text = "API Score: \(score) \n Comments: \(numComments)"
+        cell.textLabel?.numberOfLines = 0
+        
         return cell
     }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return UITableView.automaticDimension
+    }
+    
 }
 

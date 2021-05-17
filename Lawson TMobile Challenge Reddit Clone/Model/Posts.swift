@@ -41,8 +41,14 @@ struct Post: Decodable {
     
     enum CodingKeys: String, CodingKey {
         case title = "title"
+        case score = "score"
+        case numComments = "num_comments"
+        case thumbnail = "thumbnail"
     }
     
     var title: String
+    var score: Int
+    var numComments: Int
+    var thumbnail: String
     
 }
