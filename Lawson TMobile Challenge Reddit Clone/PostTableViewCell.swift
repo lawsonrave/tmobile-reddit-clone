@@ -39,10 +39,7 @@ class PostTableViewCell: UITableViewCell {
     }()
     var post: Post? {
         didSet {
-            self.addSubview(titleLabel)
-            self.addSubview(myImageView)
-            self.addSubview(scoreLabel)
-            self.addSubview(commentsLabel)
+            addSubViews(titleLabel, myImageView, scoreLabel, commentsLabel)
             updateUI()
         }
     }
@@ -76,7 +73,6 @@ class PostTableViewCell: UITableViewCell {
     func setUpConstraints() {
         
         func setUpTitleConstraints() {
-            titleLabel.translatesAutoresizingMaskIntoConstraints = false
             NSLayoutConstraint.activate([
                 titleLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 10),
                 titleLabel.topAnchor.constraint(equalTo: topAnchor, constant: 10),
@@ -85,7 +81,6 @@ class PostTableViewCell: UITableViewCell {
         }
         
         func setUpImageConstraints() {
-            myImageView.translatesAutoresizingMaskIntoConstraints = false
             NSLayoutConstraint.activate([
                 myImageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 10),
                 myImageView.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 10),
@@ -95,7 +90,6 @@ class PostTableViewCell: UITableViewCell {
         }
         
         func setUpScoreConstraints() {
-            scoreLabel.translatesAutoresizingMaskIntoConstraints = false
             NSLayoutConstraint.activate([
                 scoreLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 10),
                 scoreLabel.topAnchor.constraint(equalTo: myImageView.bottomAnchor, constant: 10),
@@ -104,7 +98,6 @@ class PostTableViewCell: UITableViewCell {
         }
         
         func setUpCommentsConstraints() {
-            commentsLabel.translatesAutoresizingMaskIntoConstraints = false
             NSLayoutConstraint.activate([
                 commentsLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 10),
                 commentsLabel.topAnchor.constraint(equalTo: scoreLabel.bottomAnchor, constant: 10),
@@ -128,6 +121,13 @@ class PostTableViewCell: UITableViewCell {
             DispatchQueue.main.async {
                 self.myImageView.image = image
             }
+        }
+    }
+    
+    func addSubViews(_ views: UIView ...) {
+        views.forEach {
+            self.addSubview($0)
+            $0.translatesAutoresizingMaskIntoConstraints = false
         }
     }
 

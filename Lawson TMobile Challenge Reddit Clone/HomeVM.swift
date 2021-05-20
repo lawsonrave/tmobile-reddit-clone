@@ -9,10 +9,8 @@ import Foundation
 
 class HomeVM {
     
-    var updateUIClosure: (() -> Void)?
-    
     init() {
-        updateUIClosure?()
+        
     }
     
     func getData(completionHandler: ((Posts?) -> Void)?) {

@@ -13,7 +13,6 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     
     var viewModel = HomeVM()
     private var myTableView: UITableView!
-//    var posts: [Child] = []
     var posts: [Child] = [] {
         didSet {
             DispatchQueue.main.async {
@@ -27,8 +26,6 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         super.viewDidLoad()
         
         getData()
-        configureViewModel()
-        viewModel.updateUIClosure?()
         
         let barHeight: CGFloat = UIApplication.shared.statusBarFrame.size.height
         let displayWidth: CGFloat = self.view.frame.width
@@ -41,8 +38,6 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
 //
         myTableView.rowHeight = UITableView.automaticDimension
         myTableView.estimatedRowHeight = 200.0
-        
-//        myTableView.autoresizesSubviews = true
         
         self.view.addSubview(myTableView)
     }
@@ -63,12 +58,6 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         }
         myTableView.reloadData()
     }
-    
-    func configureViewModel() {
-        viewModel.updateUIClosure = {
-//          update UI here
-        }
-    }
 
 
 }
@@ -85,16 +74,6 @@ extension ViewController {
         return cell
     }
     
-//    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-//        return UITableView.automaticDimension
-//        return 300
-
-//    }
-//
-//    func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
-//        return UITableView.automaticDimension
-//    }
-//
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         viewModel.getMoreData(afterLink: self.afterLink) { posts in
             if let posts = posts {
