@@ -21,6 +21,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
             }
         }
     }
+    var afterLink: String = ""
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -37,8 +38,11 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         myTableView.register(PostTableViewCell.self, forCellReuseIdentifier: reuseIdentifier)
         myTableView.dataSource = self
         myTableView.delegate = self
+//
+        myTableView.rowHeight = UITableView.automaticDimension
+        myTableView.estimatedRowHeight = 200.0
         
-        myTableView.autoresizesSubviews = true
+//        myTableView.autoresizesSubviews = true
         
         self.view.addSubview(myTableView)
     }
@@ -53,6 +57,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     
     func updateUI(with posts: Posts) {
         self.posts = posts.allPosts.children
+        self.afterLink = posts.allPosts.afterLink ?? ""
         for child in self.posts {
             print(child.post)
         }
@@ -77,17 +82,25 @@ extension ViewController {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath) as? PostTableViewCell else { return UITableViewCell() }
         cell.configure(post: self.posts[indexPath.row].post)
         
-        let score = String(self.posts[indexPath.row].post.score)
-        let numComments = String(self.posts[indexPath.row].post.numComments)
-        
-        cell.textLabel!.text = "API Score: \(score) \n Comments: \(numComments)"
-        cell.textLabel?.numberOfLines = 0
-        
         return cell
     }
     
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return UITableView.automaticDimension
+//    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+//        return UITableView.automaticDimension
+//        return 300
+
+//    }
+//
+//    func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
+//        return UITableView.automaticDimension
+//    }
+//
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        viewModel.getMoreData(afterLink: self.afterLink) { posts in
+            if let posts = posts {
+                self.updateUI(with: posts)
+            }
+        }
     }
     
 }

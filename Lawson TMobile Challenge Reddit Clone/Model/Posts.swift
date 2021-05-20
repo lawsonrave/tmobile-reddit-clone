@@ -21,9 +21,11 @@ struct Children: Decodable {
     
     enum CodingKeys: String, CodingKey {
         case children = "children"
+        case afterLink = "after"
     }
     
     var children: [Child]
+    var afterLink: String?
     
 }
 
@@ -44,11 +46,15 @@ struct Post: Decodable {
         case score = "score"
         case numComments = "num_comments"
         case thumbnail = "thumbnail"
+        case thumbnailHeight = "thumbnail_height"
+        case thumbnailWidth = "thumbnail_width"
     }
     
     var title: String
     var score: Int
     var numComments: Int
     var thumbnail: String
+    var thumbnailHeight: Int?
+    var thumbnailWidth: Int?
     
 }
